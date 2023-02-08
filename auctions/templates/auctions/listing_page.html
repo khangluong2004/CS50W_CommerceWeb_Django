@@ -1,0 +1,51 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div style = "padding: 15px; margin: 15px; font-size:23px">
+        <p> <h1> {{item.title}} </h1> </p>
+        <img src = {{item.url_img}} width = auto height = "450">
+        <p> {{item.description}} </p>
+        <p style = "font-size:35px"><strong>{{item.current_bid}}$</strong></p>
+        <p style = "color:grey; font-size: 18px"> {{count}} bid(s) </p>
+        {% if user.is_authenticated %}
+            {% if actual_owner and item.active %}
+                <a class="btn btn-outline-danger" href = "{% url 'close' id=item.id %}" role = "button">Close</a>
+            {% endif %}
+            {% if watch_exist %}
+                <a class="btn btn-outline-dark" href = "{% url 'add_watch' id=item.id method='remove' %}" role = "button">Remove Watch</a>
+            {% else %}
+                <a class="btn btn-outline-success" href = "{% url 'add_watch' id=item.id method='add' %}" role = "button">Add Watch</a>
+            {% endif %}
+            {% if won %}
+                <h3> You won {{item.title}} at {{item.current_bid}}</h3>
+            {% endif %}
+            {% if item.active%}
+                <p> {{message}} </p>
+                <form action = "{% url 'listing_page' item.id %}" method = "post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{form.as_p}}
+                        <p class = "text-center"><input type = "submit" value = "Submit" class="btn btn-outline-primary"></p>
+                    </div>
+                </form>
+            {% endif %}
+        {% endif %}
+        <br>
+        <h2> Details </h2>
+        <ul>
+            <li> <strong>Owner:</strong> {{item.owner_id.username}} </li>
+            <li> <strong>Category:</strong> {{item.category}} </li>
+        </ul>
+        <br>
+        <h2> Comments </h2>
+        <ul>
+        {% for comment in comment_list %}
+            <li>
+                <div>
+                    <p><strong> {{comment.commentor_id.username}}: </strong>{{comment.comments}} </p>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

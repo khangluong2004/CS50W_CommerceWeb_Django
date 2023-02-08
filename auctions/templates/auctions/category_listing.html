@@ -1,0 +1,25 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    <h2>Category Listing</h2>
+
+    <ul class = "list-group">
+        {% for item in items %}
+            <li class = "list-group-item">
+                <div>
+                    <table>
+                        <tr> 
+                            <td> <img src = {{item.url_img}} width = "250" height = auto> </td> 
+                            <td width = "100"></td>
+                            <td> 
+                                <p> <a href = "{% url 'listing_page' item.id %}"> <strong> {{item.title}} </strong> </a> </p>
+                                <p> {{item.description}} </p>
+                                <p> <strong> Price: </strong> {{item.current_bid}}$ </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
